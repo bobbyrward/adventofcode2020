@@ -1,6 +1,7 @@
 use anyhow::{anyhow, Result};
 use clap::Clap;
 use im::Vector;
+use itertools::Itertools;
 use tracing::debug;
 
 use crate::{input, Command};
@@ -59,6 +60,14 @@ fn find_matching_expenses(expenses: &[i64]) -> Option<(i64, i64)> {
     None
 }
 
+fn find_tripled_expenses(expenses: &[i64]) -> Option<(i64, i64, i64)> {
+    expenses
+        .iter()
+        .permutations(3)
+        .find(|triplet| triplet.iter().copied().sum::<i64>() == 2020)
+        .map(|triplet| (*triplet[0], *triplet[1], *triplet[2]))
+}
+
 fn part_one() -> Result<String> {
     let found = find_matching_expenses(
         &input("day01")?
@@ -72,7 +81,16 @@ fn part_one() -> Result<String> {
 }
 
 fn part_two() -> Result<String> {
-    Ok(String::from("Solution 2"))
+    let input = &input("day01")?
+        .lines()
+        .map(|s| s.trim().parse::<i64>())
+        .collect::<Result<Vec<_>, _>>()?;
+
+    let found = find_tripled_expenses(&input)
+        .map(|(a, b, c)| a * b * c)
+        .ok_or_else(|| anyhow!("No matches found"))?;
+
+    Ok(format!("{:?}", found))
 }
 
 #[cfg(test)]
@@ -127,7 +145,7 @@ mod test {
             .map(|s| s.trim().parse::<i64>())
             .collect::<Result<Vec<_>, _>>()?;
 
-        // assert_eq(find_matching_expenses(&input)
+        assert_eq!(find_matching_expenses(&input), Some((811, 1209)));
 
         Ok(())
     }
@@ -135,6 +153,19 @@ mod test {
     #[tracing_test::traced_test]
     #[test]
     fn test_part_two() -> Result<()> {
+        /*
+        Using the above example again, the three entries that sum to 2020 are 979, 366, and 675. Multiplying them together produces the answer, 241861950.
+        */
+        let expenses = vec![299, 366, 675, 979, 1456, 1721];
+
+        assert_eq!(find_tripled_expenses(&expenses), Some((366, 675, 979)));
+
+        let input = input("day01")?
+            .lines()
+            .map(|s| s.trim().parse::<i64>())
+            .collect::<Result<Vec<_>, _>>()?;
+
+        assert_eq!(find_tripled_expenses(&input), Some((1198, 373, 449)));
         Ok(())
     }
 }
