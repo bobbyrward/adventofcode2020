@@ -63,7 +63,7 @@ fn find_matching_expenses(expenses: &[i64]) -> Option<(i64, i64)> {
 fn find_tripled_expenses(expenses: &[i64]) -> Option<(i64, i64, i64)> {
     expenses
         .iter()
-        .permutations(3)
+        .combinations(3)
         .find(|triplet| triplet.iter().copied().sum::<i64>() == 2020)
         .map(|triplet| (*triplet[0], *triplet[1], *triplet[2]))
 }
