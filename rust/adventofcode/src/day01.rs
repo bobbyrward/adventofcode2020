@@ -70,7 +70,7 @@ fn find_tripled_expenses(expenses: &[i64]) -> Option<(i64, i64, i64)> {
 
 fn part_one() -> Result<String> {
     let found = find_matching_expenses(
-        &input("day01")?
+        &input(crate::Day::day01)
             .lines()
             .map(|s| s.trim().parse::<i64>())
             .collect::<Result<Vec<_>, _>>()?,
@@ -81,7 +81,7 @@ fn part_one() -> Result<String> {
 }
 
 fn part_two() -> Result<String> {
-    let input = &input("day01")?
+    let input = input(crate::Day::day01)
         .lines()
         .map(|s| s.trim().parse::<i64>())
         .collect::<Result<Vec<_>, _>>()?;
@@ -140,7 +140,7 @@ mod test {
 
     #[test]
     fn test_part_one() -> Result<()> {
-        let input = input("day01")?
+        let input = input(crate::Day::day01)
             .lines()
             .map(|s| s.trim().parse::<i64>())
             .collect::<Result<Vec<_>, _>>()?;
@@ -160,7 +160,7 @@ mod test {
 
         assert_eq!(find_tripled_expenses(&expenses), Some((366, 675, 979)));
 
-        let input = input("day01")?
+        let input = input(crate::Day::day01)
             .lines()
             .map(|s| s.trim().parse::<i64>())
             .collect::<Result<Vec<_>, _>>()?;

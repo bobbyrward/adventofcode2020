@@ -3,7 +3,7 @@ mod args;
 mod command;
 mod point;
 
-use anyhow::{anyhow, Context, Result};
+use anyhow::Result;
 use clap::Clap;
 use tracing_subscriber::FmtSubscriber;
 
@@ -12,53 +12,49 @@ use crate::command::Command;
 #[allow(unused_imports)]
 use crate::point::Point;
 
+macro_rules! solution {
+    ($($day:ident),+) => {
+        $(
+            mod $day;
+        )+
+
+        pub enum Day {
+            $(
+            #[allow(non_camel_case_types)]
+            $day,
+            )+
+        }
+
+        #[derive(Debug, Clap)]
+        pub enum Solutions {
+            $(
+            #[allow(non_camel_case_types)]
+            $day {
+                #[clap(subcommand)]
+                contents: crate::$day::Args,
+            },
+            )+
+        }
+
+        fn input(day: Day) -> &'static str {
+            match day {
+                $(Day::$day { .. } => include_str!(concat!("../../../inputs/", stringify!($day), ".txt")),)+
+            }
+        }
+
+        // stringify!($day)
+        impl Command for Solutions {
+            fn execute(&self) -> anyhow::Result<String> {
+                match self {
+                    $(Self::$day { contents } => contents.execute(),)+
+                }
+            }
+        }
+    }
+}
+
 // NOTE: Each solution module must be added here
 solution!(day01, day02);
-
-#[allow(dead_code)]
-fn input(name: &str) -> Result<String> {
-    Ok(
-        std::fs::read_to_string(format!("inputs/{}.txt", name))
-            .with_context(|| name.to_string())?,
-    )
-}
-
-#[allow(dead_code)]
-fn digit_to_u8(digit: u8) -> Result<u8> {
-    if digit < b'0' || digit > b'9' {
-        return Err(anyhow!("Non numeric digit: {}", digit));
-    }
-
-    Ok(digit - b'0')
-}
-
-#[allow(dead_code)]
-/// Convert a slice of numeric bytes to an integer
-fn digits_to_i64(mut digits: &[u8]) -> Result<i64> {
-    let mut sign = 1;
-
-    if !digits.is_empty() && digits[0] == b'-' {
-        sign = -1;
-        digits = &digits[1..];
-    }
-
-    if digits.iter().any(|byte| *byte < b'0' || *byte > b'9') {
-        return Err(anyhow!("Non numeric digit in string: '{:?}'", digits));
-    }
-
-    Ok(digits
-        .iter()
-        .rev()
-        .enumerate()
-        .map(|(exp, byte)| {
-            let digit: i64 = (byte - b'0').into();
-            let tens = 10i64.pow(exp as u32);
-
-            digit * tens
-        })
-        .sum::<i64>()
-        * sign)
-}
 
 fn main() -> Result<()> {
     let args = args::Args::parse();

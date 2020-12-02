@@ -14,8 +14,8 @@ pub enum Args {
 impl Command for Args {
     fn execute(&self) -> Result<String> {
         match self {
-            Self::Part1 => part_one(),
-            Self::Part2 => part_two(),
+            Self::Part1 => self.part_one(),
+            Self::Part2 => self.part_two(),
         }
     }
 }
@@ -71,28 +71,30 @@ fn parse_line(line: &str) -> Result<(Policy, &str)> {
     ))
 }
 
-fn part_one() -> Result<String> {
-    let count = input("day02")?
-        .lines()
-        .map(|s| parse_line(s))
-        .collect::<Result<Vec<_>, _>>()?
-        .iter()
-        .filter(|(policy, password)| policy.is_valid_by_count(password))
-        .count();
+impl Args {
+    fn part_one(&self) -> Result<String> {
+        let count = input(crate::Day::day02)
+            .lines()
+            .map(|s| parse_line(s))
+            .collect::<Result<Vec<_>, _>>()?
+            .iter()
+            .filter(|(policy, password)| policy.is_valid_by_count(password))
+            .count();
 
-    Ok(count.to_string())
-}
+        Ok(count.to_string())
+    }
 
-fn part_two() -> Result<String> {
-    let count = input("day02")?
-        .lines()
-        .map(|s| parse_line(s))
-        .collect::<Result<Vec<_>, _>>()?
-        .iter()
-        .filter(|(policy, password)| policy.is_valid_by_position(password))
-        .count();
+    fn part_two(&self) -> Result<String> {
+        let count = input(crate::Day::day02)
+            .lines()
+            .map(|s| parse_line(s))
+            .collect::<Result<Vec<_>, _>>()?
+            .iter()
+            .filter(|(policy, password)| policy.is_valid_by_position(password))
+            .count();
 
-    Ok(count.to_string())
+        Ok(count.to_string())
+    }
 }
 
 #[cfg(test)]
@@ -126,7 +128,7 @@ mod test {
         assert!(!p2.0.is_valid_by_count(p2.1));
         assert!(p3.0.is_valid_by_count(p3.1));
 
-        let count = input("day02")?
+        let count = input(crate::Day::day02)
             .lines()
             .map(|s| parse_line(s))
             .collect::<Result<Vec<_>, _>>()?
@@ -161,7 +163,7 @@ mod test {
         assert!(!p2.0.is_valid_by_position(p2.1));
         assert!(!p3.0.is_valid_by_position(p3.1));
 
-        let count = input("day02")?
+        let count = input(crate::Day::day02)
             .lines()
             .map(|s| parse_line(s))
             .collect::<Result<Vec<_>, _>>()?
