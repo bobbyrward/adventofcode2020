@@ -13,7 +13,7 @@ use crate::command::Command;
 use crate::point::Point;
 
 // NOTE: Each solution module must be added here
-solution!(day01);
+solution!(day01, day02);
 
 #[allow(dead_code)]
 fn input(name: &str) -> Result<String> {
