@@ -1,137 +1,190 @@
 use std::ops;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default, Hash)]
-pub struct Point {
-    pub x: i64,
-    pub y: i64,
+pub struct Point<T> {
+    pub x: T,
+    pub y: T,
 }
 
-impl Point {
-    pub fn new(x: i64, y: i64) -> Self {
+impl<T> Point<T> {
+    pub fn new(x: T, y: T) -> Self {
         Point { x, y }
     }
+}
 
+impl<T> Point<T>
+where
+    T: Copy,
+{
     #[allow(dead_code)]
-    pub fn as_tuple(&self) -> (i64, i64) {
+    pub fn as_tuple(&self) -> (T, T) {
         (self.x, self.y)
     }
 }
 
-impl ops::Add<Point> for Point {
-    type Output = Self;
+impl<T> ops::Add<Point<T>> for Point<T>
+where
+    T: ops::Add<T>,
+{
+    type Output = Point<<T as ops::Add<T>>::Output>;
 
-    fn add(self, rhs: Self) -> Self {
-        Self::new(self.x + rhs.x, self.y + rhs.y)
+    fn add(self, rhs: Self) -> Self::Output {
+        Self::Output::new(self.x + rhs.x, self.y + rhs.y)
     }
 }
 
-impl ops::Add<i64> for Point {
-    type Output = Point;
+impl<T> ops::Add<T> for Point<T>
+where
+    T: ops::Add<T> + Copy,
+{
+    type Output = Point<<T as ops::Add<T>>::Output>;
 
-    fn add(self, rhs: i64) -> Self {
-        Self::new(self.x + rhs, self.y + rhs)
+    fn add(self, rhs: T) -> Self::Output {
+        Self::Output::new(self.x + rhs, self.y + rhs)
     }
 }
 
-impl ops::AddAssign<Point> for Point {
+impl<T> ops::AddAssign<Point<T>> for Point<T>
+where
+    T: ops::AddAssign<T>,
+{
     fn add_assign(&mut self, rhs: Self) {
         self.x += rhs.x;
         self.y += rhs.y;
     }
 }
 
-impl ops::AddAssign<i64> for Point {
-    fn add_assign(&mut self, rhs: i64) {
+impl<T> ops::AddAssign<T> for Point<T>
+where
+    T: ops::AddAssign<T> + Copy,
+{
+    fn add_assign(&mut self, rhs: T) {
         self.x += rhs;
         self.y += rhs;
     }
 }
 
-impl ops::Sub<Point> for Point {
-    type Output = Self;
+impl<T> ops::Sub<Point<T>> for Point<T>
+where
+    T: ops::Sub<T>,
+{
+    type Output = Point<<T as ops::Sub<T>>::Output>;
 
-    fn sub(self, rhs: Self) -> Self {
-        Self::new(self.x - rhs.x, self.y - rhs.y)
+    fn sub(self, rhs: Self) -> Self::Output {
+        Self::Output::new(self.x - rhs.x, self.y - rhs.y)
     }
 }
 
-impl ops::Sub<i64> for Point {
-    type Output = Point;
+impl<T> ops::Sub<T> for Point<T>
+where
+    T: ops::Sub<T> + Copy,
+{
+    type Output = Point<<T as ops::Sub<T>>::Output>;
 
-    fn sub(self, rhs: i64) -> Self {
-        Self::new(self.x - rhs, self.y - rhs)
+    fn sub(self, rhs: T) -> Self::Output {
+        Self::Output::new(self.x - rhs, self.y - rhs)
     }
 }
 
-impl ops::SubAssign<Point> for Point {
+impl<T> ops::SubAssign<Point<T>> for Point<T>
+where
+    T: ops::SubAssign<T>,
+{
     fn sub_assign(&mut self, rhs: Self) {
         self.x -= rhs.x;
         self.y -= rhs.y;
     }
 }
 
-impl ops::SubAssign<i64> for Point {
-    fn sub_assign(&mut self, rhs: i64) {
+impl<T> ops::SubAssign<T> for Point<T>
+where
+    T: ops::SubAssign<T> + Copy,
+{
+    fn sub_assign(&mut self, rhs: T) {
         self.x -= rhs;
         self.y -= rhs;
     }
 }
 
-impl ops::Mul<Point> for Point {
-    type Output = Self;
+impl<T> ops::Mul<Point<T>> for Point<T>
+where
+    T: ops::Mul<T>,
+{
+    type Output = Point<<T as ops::Mul<T>>::Output>;
 
-    fn mul(self, rhs: Self) -> Self {
-        Self::new(self.x * rhs.x, self.y * rhs.y)
+    fn mul(self, rhs: Self) -> Self::Output {
+        Self::Output::new(self.x * rhs.x, self.y * rhs.y)
     }
 }
 
-impl ops::Mul<i64> for Point {
-    type Output = Self;
+impl<T> ops::Mul<T> for Point<T>
+where
+    T: ops::Mul<T> + Copy,
+{
+    type Output = Point<<T as ops::Mul<T>>::Output>;
 
-    fn mul(self, rhs: i64) -> Self {
-        Self::new(self.x * rhs, self.y * rhs)
+    fn mul(self, rhs: T) -> Self::Output {
+        Self::Output::new(self.x * rhs, self.y * rhs)
     }
 }
 
-impl ops::MulAssign<Point> for Point {
+impl<T> ops::MulAssign<Point<T>> for Point<T>
+where
+    T: ops::MulAssign<T>,
+{
     fn mul_assign(&mut self, rhs: Self) {
         self.x *= rhs.x;
         self.y *= rhs.y;
     }
 }
 
-impl ops::MulAssign<i64> for Point {
-    fn mul_assign(&mut self, rhs: i64) {
+impl<T> ops::MulAssign<T> for Point<T>
+where
+    T: ops::MulAssign<T> + Copy,
+{
+    fn mul_assign(&mut self, rhs: T) {
         self.x *= rhs;
         self.y *= rhs;
     }
 }
 
-impl ops::Div<Point> for Point {
-    type Output = Self;
+impl<T> ops::Div<Point<T>> for Point<T>
+where
+    T: ops::Div<T>,
+{
+    type Output = Point<<T as ops::Div<T>>::Output>;
 
-    fn div(self, rhs: Self) -> Self {
-        Self::new(self.x / rhs.x, self.y / rhs.y)
+    fn div(self, rhs: Self) -> Self::Output {
+        Self::Output::new(self.x / rhs.x, self.y / rhs.y)
     }
 }
 
-impl ops::Div<i64> for Point {
-    type Output = Self;
+impl<T> ops::Div<T> for Point<T>
+where
+    T: ops::Div<T> + Copy,
+{
+    type Output = Point<<T as ops::Div<T>>::Output>;
 
-    fn div(self, rhs: i64) -> Self {
-        Self::new(self.x / rhs, self.y / rhs)
+    fn div(self, rhs: T) -> Self::Output {
+        Self::Output::new(self.x / rhs, self.y / rhs)
     }
 }
 
-impl ops::DivAssign<Point> for Point {
+impl<T> ops::DivAssign<Point<T>> for Point<T>
+where
+    T: ops::DivAssign<T>,
+{
     fn div_assign(&mut self, rhs: Self) {
         self.x /= rhs.x;
         self.y /= rhs.y;
     }
 }
 
-impl ops::DivAssign<i64> for Point {
-    fn div_assign(&mut self, rhs: i64) {
+impl<T> ops::DivAssign<T> for Point<T>
+where
+    T: ops::DivAssign<T> + Copy,
+{
+    fn div_assign(&mut self, rhs: T) {
         self.x /= rhs;
         self.y /= rhs;
     }
