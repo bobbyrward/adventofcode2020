@@ -8,18 +8,18 @@ import (
 var day01Cmd = &cobra.Command{
 	Use: "day01",
 }
-var part1Cmd = &cobra.Command{
+var day01part1Cmd = &cobra.Command{
 	Use: "part1",
 	Run: day01.Part1,
 }
 
-var part2Cmd = &cobra.Command{
+var day01part2Cmd = &cobra.Command{
 	Use: "part2",
 	Run: day01.Part2,
 }
 
 func init() {
 	rootCmd.AddCommand(day01Cmd)
-	day01Cmd.AddCommand(part1Cmd)
-	day01Cmd.AddCommand(part2Cmd)
+	day01Cmd.AddCommand(day01part1Cmd)
+	day01Cmd.AddCommand(day01part2Cmd)
 }
