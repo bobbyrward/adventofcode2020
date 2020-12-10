@@ -36,24 +36,25 @@ SHINY_GOLD = "shiny gold"
 
 
 def find_gold_bag_containers(bags, bag, contents, state):
-    # import pprint
-
-    # pprint.pprint(bags[bag])
+    if bag in state:
+        return
 
     if SHINY_GOLD in bags[bag]:
         state.add(bag)
         return
-    else:
-        for child in contents:
-            child_contents = bags[child]
-            find_gold_bag_containers(bags, child, child_contents, state)
 
-            if child in state:
-                state.add(bag)
-                return
+    for child in contents:
+        child_contents = bags[child]
+
+        find_gold_bag_containers(bags, child, child_contents, state)
+
+        if child in state:
+            state.add(bag)
+            return
 
 
 def main():
+    # bags = {bag: contents for line in get_input() for bag, contents in parse_line(line)}
     lines = [parse_line(line) for line in get_input()]
     bags = {bag: contents for bag, contents in lines}
 

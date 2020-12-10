@@ -36,10 +36,6 @@ SHINY_GOLD = "shiny gold"
 
 
 def find_gold_bag_containers(bags, bag, contents, state):
-    # import pprint
-
-    # pprint.pprint(bags[bag])
-
     if SHINY_GOLD in bags[bag]:
         state.add(bag)
         return
@@ -63,9 +59,6 @@ def find_count_descendants(bags, bag, contents, state, parent_multiplier):
 def main():
     lines = [parse_line(line) for line in get_input()]
     bags = {bag: contents for bag, contents in lines}
-
-    # import pprint
-    # pprint.pprint(bags)
 
     state = [0]
 
